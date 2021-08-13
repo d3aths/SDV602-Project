@@ -1,3 +1,4 @@
+from tkinter import font
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import PySimpleGUI as sg
@@ -25,7 +26,7 @@ layout = [
     [sg.Text("Graph 1")],
     [sg.Canvas(key="-CANVAS-")],
     [sg.Text("Summary of data", size=(40, 5))],
-    [sg.Button("Prev", size=(3,1)), sg.Button("Next", size=(3,1))],
+    [sg.Button("Prev", size=(3,1)), sg.Button("New +", button_type=2, font=('Fira 9'), size=(3,1)), sg.Button("Next", size=(3,1))],
     [sg.Output(size=(61, 10), font=('Fira 12'))],
     [sg.Multiline(size=(40, 3), enter_submits=True, key='query', do_not_clear=False),
     sg.Button('Send', bind_return_key=True)],
