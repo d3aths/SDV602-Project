@@ -12,9 +12,7 @@ I am not sure as yet how to implement these buttons, but in theory they would in
 Other than that, this is a basic generated matplot graph and interface that i have customised slightly for the needs. The buttons prev and next will change screens to the previous or next uploaded data, along with its summary and possibly chat box.
 
 <p align="right">
-  
 [⬆](#contents)
-  
   </p>
 
 ---
