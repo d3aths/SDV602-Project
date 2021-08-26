@@ -1,29 +1,31 @@
-from matplotlib import use
-import PySimpleGUI as sg
-# import PySimpleGUIQt as sg; use('qt5agg')
-import matplotlib.pyplot as plt
+import PySimpleGUIQt as sg
 
-"""
-    Simultaneous PySimpleGUI Window AND a Matplotlib Interactive Window
-    A number of people have requested the ability to run a normal PySimpleGUI window that
-    launches a MatplotLib window that is interactive with the usual Matplotlib controls.
-    It turns out to be a rather simple thing to do.  The secret is to add parameter block=False to plt.show()
-"""
+# Design pattern 1 - First window does not remain active
 
-def draw_plot():
-    plt.plot([0.1, 0.2, 0.5, 0.7])
-    plt.show(block=False)
+layout = [[ sg.Text('Window 1'),],
+          [sg.Input(do_not_clear=True)],
+          [sg.Text(size=(15,1),  key='-OUTPUT-')],
+          [sg.Button('Launch 2')]]
 
-layout = [[sg.Button('Plot'), sg.Cancel(), sg.Button('Popup')]]
-
-window = sg.Window('Have some Matplotlib....', layout)
-
+win1 = sg.Window('Window 1', layout)
+win2_active=False
 while True:
-    event, values = window.read()
-    if event in (sg.WIN_CLOSED, 'Cancel'):
+    ev1, vals1 = win1.read(timeout=10)
+    if ev1 == sg.WIN_CLOSED:
         break
-    elif event == 'Plot':
-        draw_plot()
-    elif event == 'Popup':
-        sg.popup('Yes, your application is still running')
-window.close()
+    win1.FindElement('-OUTPUT-').update(vals1[0])
+
+    if ev1 == 'Launch 2'  and not win2_active:
+        win2_active = True
+        win1.Hide()
+        layout2 = [[sg.Text('Window 2')],       # note must create a layout from scratch every time. No reuse
+                   [sg.Button('Exit')]]
+
+        win2 = sg.Window('Window 2', layout2)
+        while True:
+            ev2, vals2 = win2.read()
+            if ev2 == sg.WIN_CLOSED or ev2 == 'Exit':
+                win2.close()
+                win2_active = False
+                win1.UnHide()
+                break
