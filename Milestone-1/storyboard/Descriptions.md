@@ -4,6 +4,7 @@
 - [Main Page](#main-page)  
 - [Chat](#chat)  
 - [Login](#login-page)  
+- [Notes](#notes,-errors,-etc)
 
 ## Main Page
 ![main window](https://raw.githubusercontent.com/d3aths/SDV602-Project/master/Milestone-1/storyboard/main%20window%20v3.png?token=AD26CGCOK64SHGCV52V6TOLBFRAUI)
@@ -61,3 +62,7 @@ The main window shows up when the program starts to run for some reason that I c
 The buttons underneath the chart for interaction are still just a concept and I cannot work out how to implement something like that.
 The prev and next buttons are not currently coded to switch windows within the saame main window.
 I'm not sure what to do for a 3rd screen without just saying "oh i'll have 3 different charts and each window they appear on can be classified as my 3 screens.
+  
+<h2 align="right">
+  
+[⬆](#contents)
