@@ -4,7 +4,7 @@
 - [Main Page](#main-page)  
 - [Chat](#chat)  
 - [Login](#login-page)  
-- [Notes](#notes,-errors,-etc)
+- [Notes](#notes-errors-etc)
 
 ## Main Page
 ![main window](https://raw.githubusercontent.com/d3aths/SDV602-Project/master/Milestone-1/storyboard/main%20window%20v3.png?token=AD26CGCOK64SHGCV52V6TOLBFRAUI)
