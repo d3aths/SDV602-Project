@@ -4,7 +4,6 @@
 - [Main Page](#main-page)  
 - [Chat](#chat)  
 - [Login](#login-page)  
-- [Notes](#notes-errors-etc)
 
 ## Main Page
 ![main window](https://raw.githubusercontent.com/d3aths/SDV602-Project/master/Milestone-1/storyboard/main%20window%20v3.png?token=AD26CGCOK64SHGCV52V6TOLBFRAUI)
@@ -56,13 +55,3 @@ Concept of error that might appear while registering, if a user tries to input a
   
 [⬆](#contents)
   
-## Notes, Errors, Etc
-The main window shows up when the program starts to run for some reason that I cant understand as yet, since I have set the code up for the main window to be inactive, and the first window that is read when the program runs is just supposed to be the window for login and register. I have played around with the `window.Hide()` method and inserted it at various points within the code, and the closest I can get is the window opening at first and then disappearing when something is clicked on the account window, which is not ideal.
-
-The buttons underneath the chart for interaction are still just a concept and I cannot work out how to implement something like that.
-The prev and next buttons are not currently coded to switch windows within the saame main window.
-I'm not sure what to do for a 3rd screen without just saying "oh i'll have 3 different charts and each window they appear on can be classified as my 3 screens.
-  
-<h2 align="right">
-  
-[⬆](#contents)
