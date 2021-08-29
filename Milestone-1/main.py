@@ -169,18 +169,19 @@ while True:     # The Event Loop
                         draw_figure(window2["-CANVAS2-"].TKCanvas, fig2)
                         print = lambda *args, **kwargs: window2['MLINE_KEY'].print(*args, **kwargs)
                         while True:
-                            event2, value2 = window2.read()
-                            if event2 in (sg.WIN_CLOSED, 'Close'):
+                            event, value = window2.read()
+                            if event in (sg.WIN_CLOSED, 'Close'):
                                 break
-                            if event2 == 'Send':
-                                query2 = value2['query2'].rstrip()
+                            if event == 'Send':
+                                query2 = value['query2'].rstrip()
                                 print('Celeste: {}'.format(query2))
-                            if event2 == 'Prev':     #opens prev window
+                            if event == 'Prev':     #opens prev window
                                 window.UnHide()
                                 window2.Hide()
                                 window_active=True
                                 window2_active=False
-                            if event2 == 'Next':       #opens window 3 if next is clicked
+                                window.read()
+                            if event == 'Next':       #opens window 3 if next is clicked
                                 window3_active=True
                                 window2_active=False
                                 window3.UnHide()
@@ -188,17 +189,18 @@ while True:     # The Event Loop
                                 draw_figure(window3["-CANVAS3-"].TKCanvas, fig3)
                                 print = lambda *args, **kwargs: window3['MLINE_KEY'].print(*args, **kwargs)
                                 while True:
-                                    event3, value3 = window3.read()
-                                    if event3 in (sg.WIN_CLOSED, 'Close'):
+                                    event, value = window3.read()
+                                    if event in (sg.WIN_CLOSED, 'Close'):
                                         break
-                                    if event3 == 'Send':
-                                        query3 = value3['query3'].rstrip()
+                                    if event == 'Send':
+                                        query3 = value['query3'].rstrip()
                                         print('Celeste: {}'.format(query3))
-                                    if event3 == 'Prev':     #opens prev window
+                                    if event == 'Prev':     #opens prev window
                                         window2.UnHide()
                                         window3.Hide()
                                         window2_active=True
                                         window3_active=False
+                                        window2.read()
                                 window3.close()
                                 accwindow.close()
                         window2.close()          
