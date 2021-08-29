@@ -6,7 +6,7 @@
 
 The main window shows up when the program starts to run for some reason that I cant understand as yet, since I have set the code up for the main window to be inactive, and the first window that is read when the program runs is just supposed to be the window for login and register. I have played around with the `window.Hide()` method and inserted it at various points within the code, and the closest I can get is the window opening at first and then disappearing when something is clicked on the account window, which is not ideal.
   
-*UPDATE* all windows are now hidden and only come out when theyre needed properly now. aside from everything opening and disappearing in about 1 second at the very start of the app.
+\**UPDATE*\* all windows are now hidden and only come out when theyre needed properly now. aside from everything opening and disappearing in about 1 second at the very start of the app.
 
 The buttons underneath the chart for interaction are still just a concept and I cannot work out how to implement something like that.
 
