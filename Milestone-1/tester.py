@@ -1,31 +1,37 @@
 import PySimpleGUIQt as sg
 
-# Design pattern 1 - First window does not remain active
+def main():
 
-layout = [[ sg.Text('Window 1'),],
-          [sg.Input(do_not_clear=True)],
-          [sg.Text(size=(15,1),  key='-OUTPUT-')],
-          [sg.Button('Launch 2')]]
+    MLINE_KEY = '-MLINE-'+sg.WRITE_ONLY_KEY
 
-win1 = sg.Window('Window 1', layout)
-win2_active=False
-while True:
-    ev1, vals1 = win1.read(timeout=10)
-    if ev1 == sg.WIN_CLOSED:
-        break
-    win1.FindElement('-OUTPUT-').update(vals1[0])
+    layout = [  [sg.Text('Demonstration of Multiline Element\'s ability to show multiple colors ')],
+                [sg.Multiline(size=(60,20), disabled=True, autoscroll=False, key=MLINE_KEY)],
+                [sg.B('Plain'), sg.Button('Text Blue Line'), sg.Button('Text Green Line')],
+                [sg.Button('Background Blue Line'),sg.Button('Background Green Line'), sg.B('White on Green')]  ]
 
-    if ev1 == 'Launch 2'  and not win2_active:
-        win2_active = True
-        win1.Hide()
-        layout2 = [[sg.Text('Window 2')],       # note must create a layout from scratch every time. No reuse
-                   [sg.Button('Exit')]]
+    window = sg.Window('Demonstration of Multicolored Multline Text', layout)
 
-        win2 = sg.Window('Window 2', layout2)
-        while True:
-            ev2, vals2 = win2.read()
-            if ev2 == sg.WIN_CLOSED or ev2 == 'Exit':
-                win2.close()
-                win2_active = False
-                win1.UnHide()
-                break
+    # Make all prints output to the multline in Red text
+    print = lambda *args, **kwargs: window[MLINE_KEY].print(*args, **kwargs, text_color='red')
+
+    while True:
+        event, values = window.read()       # type: (str, dict)
+        if event in (None, 'Exit'):
+            break
+        print(event, values)
+        if 'Text Blue' in event:
+            window[MLINE_KEY].print('This is blue text', text_color='blue', end='')
+        if 'Text Green' in event:
+            window[MLINE_KEY].print('This is green text', text_color='green')
+        if 'Background Blue' in event:
+            window[MLINE_KEY].print('This is Blue Background', background_color='blue')
+        if 'Background Green' in event:
+            window[MLINE_KEY].print('This is Green Background', background_color='green')
+        if 'White on Green' in event:
+            window[MLINE_KEY].print('This is white text on a green background', text_color='white', background_color='green')
+        if event == 'Plain':
+            window[MLINE_KEY].print('This is plain text with no extra coloring')
+    window.close()
+
+if __name__ == '__main__':
+    main()
