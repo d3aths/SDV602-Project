@@ -16,6 +16,8 @@ The output window was able to be written in and if you did that, it would intere
 
 The chat on all windows was outputting to window3, no matter if you were currently on window1 or window2. I spent a lot of time trying to figure out what was happening with this, I thought it may have been the keys assigned to the multilines and outputs at first so experimented with isolating that and changing them around. Nothing worked. I looked up the problem and attributed it to pysimplegui. Since the last output box was on window3 and python reads in a linear way, everything was just going to that output element. I fixed this by changing all the outputs to a multiline element and using [this solution](https://github.com/PySimpleGUI/PySimpleGUI/issues/2674) from pysimple's github that had the same problem as I did. Now it it working as expected, and it is still read-only.
 
+There is a button on the first window which opens all windows for viewing, however if you do that, the chat only works on the main window. This may be a little complicated to fix cause of how the chat output is coded.
+
 ### Storyboard
 
 [Link here](https://github.com/d3aths/SDV602-Project/blob/master/Milestone-1/storyboard/Descriptions.md)
