@@ -50,6 +50,7 @@ accwindow = sg.Window(
 # Main window
 layout = [
     [sg.Text("Graph 1")],
+    [sg.Button('Show all', font="Helvetica 8", size=(3,1))],
     [sg.Canvas(key="-CANVAS-")],
     [sg.Text("Summary of data", size=(40, 5))],
     [sg.Button("Prev", size=(3,1), disabled=True), sg.Button("New +", button_type=2, font=('Fira 9'), size=(3,1)), sg.Button("Next", size=(3,1))],
@@ -161,6 +162,11 @@ while True:     # The Event Loop
                     if event == 'Send':       #event for live chat
                         query = value['query'].rstrip()
                         print('Celeste: {}'.format(query))
+                    if event =='Show all':          #opens all windows
+                        window2.UnHide()
+                        draw_figure(window2["-CANVAS2-"].TKCanvas, fig2)
+                        window3.UnHide()
+                        draw_figure(window3["-CANVAS3-"].TKCanvas, fig3)
                     if event == 'Next':       #opens window 2 if next is clicked
                         window2_active=True
                         window2.UnHide() #for if you are navigating next again after already coming from window 2
