@@ -11,6 +11,11 @@
 In theory these buttons would interact with the graph, with the user being able to zoom in on points, refresh the graph back to its original view, scroll along the axes, and save a picture of where they move to. These controls come built in with matplotlib.  
 Other than that, this is a basic generated matplot graph and interface that i have customised slightly for the needs. The buttons prev and next will change screens to the previous or next uploaded data, along with its summary and possibly chat box.
 
+### Navigation
+![nav](https://github.com/d3aths/SDV602-Project/blob/master/Milestone-1/storyboard/nav.png?raw=true)
+
+These are the buttons which allow you to move from screen to screen
+
 <h2 align="right">
   
 [⬆](#contents)
