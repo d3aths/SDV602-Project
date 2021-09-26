@@ -77,9 +77,9 @@ layout2 = [
     [sg.Canvas(key="-CANVAS2-")],
     [sg.Text("Summary of data", size=(40, 5))],
     [sg.Button("Prev", size=(3,1)), sg.Button("New +", button_type=2, font=('Fira 9'), size=(3,1)), sg.Button("Next", size=(3,1))],
-    [sg.Multiline(size=(61, 10), font=('Fira 12'), key='MLINE_KEY', disabled=True)],
-    [sg.Multiline(size=(40, 3), enter_submits=True, key='query2', do_not_clear=False),
-    sg.Button('Send', bind_return_key=True)],
+    # [sg.Multiline(size=(61, 10), font=('Fira 12'), key='MLINE_KEY', disabled=True)],
+    # [sg.Multiline(size=(40, 3), enter_submits=True, key='query2', do_not_clear=False),
+    # sg.Button('Send', bind_return_key=True)],
     [sg.Button("Close")],
 ]
 
@@ -100,9 +100,9 @@ layout3 = [
     [sg.Canvas(key="-CANVAS3-")],
     [sg.Text("Summary of data", size=(40, 5))],
     [sg.Button("Prev", size=(3,1)), sg.Button("New +", button_type=2, font=('Fira 9'), size=(3,1)), sg.Button("Next", size=(3,1), disabled=True)],
-    [sg.Multiline(size=(61, 10), font=('Fira 12'), key='MLINE_KEY', disabled=True)],
-    [sg.Multiline(size=(40, 3), enter_submits=True, key='query3', do_not_clear=False),
-    sg.Button('Send', bind_return_key=True)],
+    # [sg.Multiline(size=(61, 10), font=('Fira 12'), key='MLINE_KEY', disabled=True)],
+    # [sg.Multiline(size=(40, 3), enter_submits=True, key='query3', do_not_clear=False),
+    # sg.Button('Send', bind_return_key=True)],
     [sg.Button("Close")],
 ]
 
@@ -127,6 +127,70 @@ window.Hide()
 window2.Hide()
 window3.Hide()
 
+#window definitions
+def window1_open():
+    event, value = window.read()
+    if event in (sg.WIN_CLOSED, 'Close'):
+        window.Close()
+        accwindow.close()
+        loginwindow.close()
+    if event == 'Send':       #event for live chat
+        query = value['query'].rstrip()
+        print('Celeste: {}'.format(query))
+    if event =='Show all':          #opens all windows
+        window2.UnHide()
+        draw_figure(window2["-CANVAS2-"].TKCanvas, fig2)
+        window3.UnHide()
+        draw_figure(window3["-CANVAS3-"].TKCanvas, fig3)
+    if event == 'Next':       #opens window 2 if next is clicked
+        window2_active=True
+        window2.UnHide() #for if you are navigating next again after already coming from window 2
+        # window.Hide()
+        # window_active=False
+        draw_figure(window2["-CANVAS2-"].TKCanvas, fig2)
+        window2_open()
+
+def window2_open():
+    event, value = window2.read()
+    if event in (sg.WIN_CLOSED, 'Close'):
+        window2.Close()
+        # accwindow.close()
+        # loginwindow.close()
+    if event == 'Send':
+        query2 = value['query2'].rstrip()
+        print('Celeste: {}'.format(query2))
+    if event == 'Prev':     #opens prev window
+        # window.UnHide()
+        # window2.Hide()
+        window_active=True
+        # window2_active=False
+        window.read()
+        window1_open()
+    if event == 'Next':       #opens window 3 if next is clicked
+        window3_active=True
+        # window2_active=False
+        window3.UnHide()
+        # window2.Hide()
+        draw_figure(window3["-CANVAS3-"].TKCanvas, fig3)
+        window3_open()
+
+def window3_open():
+    event, value = window3.read()
+    if event in (sg.WIN_CLOSED, 'Close'):
+        window3.Close()
+        accwindow.close()
+        loginwindow.close()
+    if event == 'Send':
+        query3 = value['query3'].rstrip()
+        print('Celeste: {}'.format(query3))
+    if event == 'Prev':     #opens prev window
+        # window2.UnHide()
+        # window3.Hide()
+        window2_active=True
+        # window3_active=False
+        window2.read()
+        window2_open()
+
 #Workaround for outputs printing wrong place
 print = lambda *args, **kwargs: window['MLINE_KEY'].print(*args, **kwargs)
 
@@ -147,6 +211,7 @@ while True:     # The Event Loop
             [sg.InputText("Password")],
             [sg.Button("Ok")], [sg.Button("Cancel")]]
         loginwindow = sg.Window("Login", layoutlogin, modal=True)
+
         while True:
             event, value = loginwindow.read()
             if event == sg.WIN_CLOSED:
@@ -155,65 +220,10 @@ while True:     # The Event Loop
                 loginwindow.close()
                 accwindow.Hide()
                 window.UnHide()
-                while True:             #opens the main window after logging in is accepted
-                    event, value = window.read()
-                    if event in (sg.WIN_CLOSED, 'Close'):
-                        break
-                    if event == 'Send':       #event for live chat
-                        query = value['query'].rstrip()
-                        print('Celeste: {}'.format(query))
-                    if event =='Show all':          #opens all windows
-                        window2.UnHide()
-                        draw_figure(window2["-CANVAS2-"].TKCanvas, fig2)
-                        window3.UnHide()
-                        draw_figure(window3["-CANVAS3-"].TKCanvas, fig3)
-                    if event == 'Next':       #opens window 2 if next is clicked
-                        window2_active=True
-                        window2.UnHide() #for if you are navigating next again after already coming from window 2
-                        window.Hide()
-                        window_active=False
-                        draw_figure(window2["-CANVAS2-"].TKCanvas, fig2)
-                        print = lambda *args, **kwargs: window2['MLINE_KEY'].print(*args, **kwargs)
-                        while True:
-                            event, value = window2.read()
-                            if event in (sg.WIN_CLOSED, 'Close'):
-                                break
-                            if event == 'Send':
-                                query2 = value['query2'].rstrip()
-                                print('Celeste: {}'.format(query2))
-                            if event == 'Prev':     #opens prev window
-                                window.UnHide()
-                                window2.Hide()
-                                window_active=True
-                                window2_active=False
-                                window.read()
-                            if event == 'Next':       #opens window 3 if next is clicked
-                                window3_active=True
-                                window2_active=False
-                                window3.UnHide()
-                                window2.Hide()
-                                draw_figure(window3["-CANVAS3-"].TKCanvas, fig3)
-                                print = lambda *args, **kwargs: window3['MLINE_KEY'].print(*args, **kwargs)
-                                while True:
-                                    event, value = window3.read()
-                                    if event in (sg.WIN_CLOSED, 'Close'):
-                                        break
-                                    if event == 'Send':
-                                        query3 = value['query3'].rstrip()
-                                        print('Celeste: {}'.format(query3))
-                                    if event == 'Prev':     #opens prev window
-                                        window2.UnHide()
-                                        window3.Hide()
-                                        window2_active=True
-                                        window3_active=False
-                                        window2.read()
-                                window3.close()
-                                accwindow.close()
-                        window2.close()          
-                        accwindow.close()                         
-                window.close()
-                accwindow.close()
-        loginwindow.close()
+
+                while True:             #opens the main window after logging in is accepted and starts drawing on defs
+                    window1_open()    
+
     if event == 'Register':         #opens register window if that button is pressed
         regwindow_active=True
         layoutreg = [
@@ -221,6 +231,7 @@ while True:     # The Event Loop
             [sg.InputText("Password")],
             [sg.Button('Ok')], [sg.Button('Cancel')]]
         regwindow = sg.Window("Register", layoutreg, modal=True)    
+        
         while True:
             event, value = regwindow.read()
             if event == sg.WIN_CLOSED:
