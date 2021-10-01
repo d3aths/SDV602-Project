@@ -1,37 +1,80 @@
-import PySimpleGUIQt as sg
+import PySimpleGUI as sg
+import numpy as np
 
-def main():
+"""
+    Embedding the Matplotlib toolbar into your application
+"""
 
-    MLINE_KEY = '-MLINE-'+sg.WRITE_ONLY_KEY
+# ------------------------------- This is to include a matplotlib figure in a Tkinter canvas
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-    layout = [  [sg.Text('Demonstration of Multiline Element\'s ability to show multiple colors ')],
-                [sg.Multiline(size=(60,20), disabled=True, autoscroll=False, key=MLINE_KEY)],
-                [sg.B('Plain'), sg.Button('Text Blue Line'), sg.Button('Text Green Line')],
-                [sg.Button('Background Blue Line'),sg.Button('Background Green Line'), sg.B('White on Green')]  ]
 
-    window = sg.Window('Demonstration of Multicolored Multline Text', layout)
+def draw_figure_w_toolbar(canvas, fig, canvas_toolbar):
+    if canvas.children:
+        for child in canvas.winfo_children():
+            child.destroy()
+    if canvas_toolbar.children:
+        for child in canvas_toolbar.winfo_children():
+            child.destroy()
+    figure_canvas_agg = FigureCanvasTkAgg(fig, master=canvas)
+    figure_canvas_agg.draw()
+    toolbar = Toolbar(figure_canvas_agg, canvas_toolbar)
+    toolbar.update()
+    figure_canvas_agg.get_tk_widget().pack(side='right', fill='both', expand=1)
 
-    # Make all prints output to the multline in Red text
-    print = lambda *args, **kwargs: window[MLINE_KEY].print(*args, **kwargs, text_color='red')
 
-    while True:
-        event, values = window.read()       # type: (str, dict)
-        if event in (None, 'Exit'):
-            break
-        print(event, values)
-        if 'Text Blue' in event:
-            window[MLINE_KEY].print('This is blue text', text_color='blue', end='')
-        if 'Text Green' in event:
-            window[MLINE_KEY].print('This is green text', text_color='green')
-        if 'Background Blue' in event:
-            window[MLINE_KEY].print('This is Blue Background', background_color='blue')
-        if 'Background Green' in event:
-            window[MLINE_KEY].print('This is Green Background', background_color='green')
-        if 'White on Green' in event:
-            window[MLINE_KEY].print('This is white text on a green background', text_color='white', background_color='green')
-        if event == 'Plain':
-            window[MLINE_KEY].print('This is plain text with no extra coloring')
-    window.close()
+class Toolbar(NavigationToolbar2Tk):
+    def __init__(self, *args, **kwargs):
+        super(Toolbar, self).__init__(*args, **kwargs)
 
-if __name__ == '__main__':
-    main()
+
+# ------------------------------- PySimpleGUI CODE
+
+layout = [
+    [sg.T('Graph: y=sin(x)')],
+    [sg.B('Plot'), sg.B('Exit')],
+    [sg.T('Controls:')],
+    [sg.Canvas(key='controls_cv')],
+    [sg.T('Figure:')],
+    [sg.Column(
+        layout=[
+            [sg.Canvas(key='fig_cv',
+                       # it's important that you set this size
+                       size=(400 * 2, 400)
+                       )]
+        ],
+        background_color='#DAE0E6',
+        pad=(0, 0)
+    )],
+    [sg.B('Alive?')]
+
+]
+
+window = sg.Window('Graph with controls', layout)
+
+while True:
+    event, values = window.read()
+    print(event, values)
+    if event in (sg.WIN_CLOSED, 'Exit'):  # always,  always give a way out!
+        break
+    elif event is 'Plot':
+        # ------------------------------- PASTE YOUR MATPLOTLIB CODE HERE
+        plt.figure(1)
+        fig = plt.gcf()
+        DPI = fig.get_dpi()
+        # ------------------------------- you have to play with this size to reduce the movement error when the mouse hovers over the figure, it's close to canvas size
+        fig.set_size_inches(404 * 2 / float(DPI), 404 / float(DPI))
+        # -------------------------------
+        x = np.linspace(0, 2 * np.pi)
+        y = np.sin(x)
+        plt.plot(x, y)
+        plt.title('y=sin(x)')
+        plt.xlabel('X')
+        plt.ylabel('Y')
+        plt.grid()
+
+        # ------------------------------- Instead of plt.show()
+        draw_figure_w_toolbar(window['fig_cv'].TKCanvas, fig, window['controls_cv'].TKCanvas)
+
+window.close()

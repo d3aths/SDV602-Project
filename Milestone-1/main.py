@@ -2,37 +2,123 @@ from logging import disable
 from tkinter import font
 from PySimpleGUI.PySimpleGUI import InputText
 import numpy as np
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import PySimpleGUI as sg
 import matplotlib
-import matplotlib.pyplot
+import matplotlib.pyplot as plt
 from numpy.core.numeric import binary_repr
+import csv
 
 # window colour theme
 sg.theme('DarkGrey14')
 
 
+#switches the rows around to be able to be read properly
+def transpose(table_csv, skip_if_empty = True):
+    transposed_tmp = []
+    transposed = []
+    transposed_tmp = list(zip(*table_csv))
+    
+    # change each row to a list
+    for row_tuple in transposed_tmp:
+        transposed += [list(row_tuple)]
+    
+    return transposed
+
+#reads the csv and makes the graph for the first window
+def convictionsbysex():
+    """
+    Plot more than one on a single graph
+    Args 
+          **kwargs lets you pass arguments into this function
+    """
+    years = []
+    convictions_f = []
+    convictions_m = []
+
+    with open('nz-convictions (copy).csv') as f:
+        reader = csv.reader(f, delimiter=',')
+        transposed = transpose(reader)
+
+        for row in transposed:
+            years.append(int(row[0])),
+            convictions_f.append(int(row[3])),
+            convictions_m.append(int(row[4]))
+
+
+    fig, ax = plt.subplots()
+
+    ax.set(xlabel='Year',
+        ylabel='Convictions by sex',
+        title='New Zealand Conviction Data')
+
+    ax.plot(years, convictions_f)
+    ax.plot(years, convictions_f, "oy")
+    ax.plot(years, convictions_m)
+    ax.plot(years, convictions_m, "or")
+
+    return plt.gcf()
+
+#reads the csv and makes the graph for the second window
+def convictionsbyrace():
+    """
+    Plot more than one on a single graph
+    Args 
+          **kwargs lets you pass arguments into this function
+    """
+    years = []
+    euro = []
+    maori = []
+    pacific = []
+    asian = []
+    other = []
+
+    with open('nz-convictions (copy).csv') as f:
+        reader = csv.reader(f, delimiter=',')
+        transposed = transpose(reader)
+
+        for row in transposed:
+            years.append(int(row[0])),
+            euro.append(int(row[8])),
+            maori.append(int(row[9])),
+            pacific.append(int(row[10])),
+            asian.append(int(row[11])),
+            other.append(int(row[12])),
+
+    plt.stackplot(years, euro, maori, other, pacific, asian)
+    plt.title('NZ Conviction Data')
+    
+    return plt.gcf()
+
 # code for graphs
-fig = matplotlib.pyplot.Figure(figsize=(5, 4), dpi=100)
-t = np.arange(0, 3, .01)
-fig.add_subplot(111).plot(t, 2 * np.sin(2 * np.pi * t))
+fig1 = convictionsbysex()
 
-fig2 = matplotlib.pyplot.Figure(figsize=(5, 4), dpi=100)
-t = np.arange(0, 3, .01)
-fig2.add_subplot(111).plot(t, 2 * np.sin(2 * np.pi * t))
+fig2 = convictionsbyrace()
 
-fig3 = matplotlib.pyplot.Figure(figsize=(5, 4), dpi=100)
+fig3 = plt.Figure(figsize=(5, 4), dpi=100)
 t = np.arange(0, 3, .01)
 fig3.add_subplot(111).plot(t, 2 * np.sin(2 * np.pi * t))
 
 matplotlib.use('TkAgg')
-matplotlib.pyplot.ion()
+plt.ion()
 
-def draw_figure(canvas, figure):
-    figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
+#drawing the canvas + including toolbar for interactivity
+def draw_figure_w_toolbar(canvas, fig, canvas_toolbar):
+    if canvas.children:
+        for child in canvas.winfo_children():
+            child.destroy()
+    if canvas_toolbar.children:
+        for child in canvas_toolbar.winfo_children():
+            child.destroy()
+    figure_canvas_agg = FigureCanvasTkAgg(fig, master=canvas)
     figure_canvas_agg.draw()
-    figure_canvas_agg.get_tk_widget().pack(side="top", fill="both", expand=1)
-    return figure_canvas_agg
+    toolbar = Toolbar(figure_canvas_agg, canvas_toolbar)
+    toolbar.update()
+    figure_canvas_agg.get_tk_widget().pack(side='right', fill='both', expand=1)
+
+class Toolbar(NavigationToolbar2Tk):
+    def __init__(self, *args, **kwargs):
+        super(Toolbar, self).__init__(*args, **kwargs)
 
 # Account login or register to show up first
 layoutacc = [
@@ -51,7 +137,8 @@ accwindow = sg.Window(
 layout = [
     [sg.Text("Graph 1")],
     [sg.Button('Show all', font="Helvetica 8", size=(3,1))],
-    [sg.Canvas(key="-CANVAS-")],
+    [sg.Canvas(key="-CANVAS1-", size=(400 * 2, 400))],
+    [sg.Canvas(key='controls_cv1')],
     [sg.Text("Summary of data", size=(40, 5))],
     [sg.Button("Prev", size=(3,1), disabled=True), sg.Button("New +", button_type=2, font=('Fira 9'), size=(3,1)), sg.Button("Next", size=(3,1))],
     [sg.Multiline(size=(61, 10), font=('Fira 12'), key='MLINE_KEY', disabled=True)],
@@ -74,7 +161,8 @@ window = sg.Window(
 # Main window 2
 layout2 = [
     [sg.Text("Graph 2")],
-    [sg.Canvas(key="-CANVAS2-")],
+    [sg.Canvas(key="-CANVAS2-", size=(400 * 2, 400))],
+    [sg.Canvas(key='controls_cv2')],
     [sg.Text("Summary of data", size=(40, 5))],
     [sg.Button("Prev", size=(3,1)), sg.Button("New +", button_type=2, font=('Fira 9'), size=(3,1)), sg.Button("Next", size=(3,1))],
     # [sg.Multiline(size=(61, 10), font=('Fira 12'), key='MLINE_KEY', disabled=True)],
@@ -97,7 +185,8 @@ window2 = sg.Window(
 # Main window 3
 layout3 = [
     [sg.Text("Graph 3")],
-    [sg.Canvas(key="-CANVAS3-")],
+    [sg.Canvas(key="-CANVAS3-", size=(400 * 2, 400))],
+    [sg.Canvas(key='controls_cv3')],
     [sg.Text("Summary of data", size=(40, 5))],
     [sg.Button("Prev", size=(3,1)), sg.Button("New +", button_type=2, font=('Fira 9'), size=(3,1)), sg.Button("Next", size=(3,1), disabled=True)],
     # [sg.Multiline(size=(61, 10), font=('Fira 12'), key='MLINE_KEY', disabled=True)],
@@ -139,15 +228,15 @@ def window1_open():
         print('Celeste: {}'.format(query))
     if event =='Show all':          #opens all windows
         window2.UnHide()
-        draw_figure(window2["-CANVAS2-"].TKCanvas, fig2)
+        draw_figure_w_toolbar(window['-CANVAS1'].TKCanvas, fig1, window['controls_cv1'].TKCanvas)
         window3.UnHide()
-        draw_figure(window3["-CANVAS3-"].TKCanvas, fig3)
+        draw_figure_w_toolbar(window['-CANVAS3-'].TKCanvas, fig3, window['controls_cv3'].TKCanvas)
     if event == 'Next':       #opens window 2 if next is clicked
         window2_active=True
         window2.UnHide() #for if you are navigating next again after already coming from window 2
         # window.Hide()
         # window_active=False
-        draw_figure(window2["-CANVAS2-"].TKCanvas, fig2)
+        draw_figure_w_toolbar(window['-CANVAS2'].TKCanvas, fig2, window['controls_cv2'].TKCanvas)
         window2_open()
 
 def window2_open():
@@ -171,7 +260,7 @@ def window2_open():
         # window2_active=False
         window3.UnHide()
         # window2.Hide()
-        draw_figure(window3["-CANVAS3-"].TKCanvas, fig3)
+        draw_figure_w_toolbar(window['-CANVAS3-'].TKCanvas, fig3, window['controls_cv3'].TKCanvas)
         window3_open()
 
 def window3_open():
@@ -195,7 +284,7 @@ def window3_open():
 print = lambda *args, **kwargs: window['MLINE_KEY'].print(*args, **kwargs)
 
 # Add the plot to the windows
-draw_figure(window["-CANVAS-"].TKCanvas, fig)
+draw_figure_w_toolbar(window['-CANVAS1-'].TKCanvas, fig1, window['controls_cv1'].TKCanvas)
 
 # # Make the Output Element "read only"
 # window.Element('_OUT_')._TKOut.output.bind("<Key>", lambda e: "break")
@@ -204,7 +293,7 @@ while True:     # The Event Loop
     event, value = accwindow.read()
     if event in (sg.WIN_CLOSED, 'Close'):            # quit if exit button or X
         break
-    if event == 'Login':        #opoens login window if login button is pressed
+    if event == 'Login':        #opens login window if login button is pressed
         loginwindow_active=True
         layoutlogin = [
             [sg.InputText("Username")],
