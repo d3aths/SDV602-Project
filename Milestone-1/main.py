@@ -91,9 +91,13 @@ def convictionsbyrace():
     return plt.gcf()
 
 # code for graphs
-fig1 = convictionsbysex()
+fig1 = convictionsbyrace()
 
-fig2 = convictionsbyrace()
+fig2 = plt.Figure(figsize=(5, 4), dpi=100)
+t = np.arange(0, 3, .01)
+fig2.add_subplot(111).plot(t, 2 * np.sin(2 * np.pi * t))
+
+# fig2 = convictionsbyrace()
 
 fig3 = plt.Figure(figsize=(5, 4), dpi=100)
 t = np.arange(0, 3, .01)
@@ -228,15 +232,15 @@ def window1_open():
         print('Celeste: {}'.format(query))
     if event =='Show all':          #opens all windows
         window2.UnHide()
-        draw_figure_w_toolbar(window['-CANVAS1'].TKCanvas, fig1, window['controls_cv1'].TKCanvas)
+        draw_figure_w_toolbar(window2['-CANVAS2-'].TKCanvas, fig2, window2['controls_cv2'].TKCanvas)
         window3.UnHide()
-        draw_figure_w_toolbar(window['-CANVAS3-'].TKCanvas, fig3, window['controls_cv3'].TKCanvas)
+        draw_figure_w_toolbar(window3['-CANVAS3-'].TKCanvas, fig3, window3['controls_cv3'].TKCanvas)
     if event == 'Next':       #opens window 2 if next is clicked
         window2_active=True
         window2.UnHide() #for if you are navigating next again after already coming from window 2
         # window.Hide()
         # window_active=False
-        draw_figure_w_toolbar(window['-CANVAS2'].TKCanvas, fig2, window['controls_cv2'].TKCanvas)
+        draw_figure_w_toolbar(window2['-CANVAS2-'].TKCanvas, fig2, window2['controls_cv2'].TKCanvas)
         window2_open()
 
 def window2_open():
@@ -260,7 +264,7 @@ def window2_open():
         # window2_active=False
         window3.UnHide()
         # window2.Hide()
-        draw_figure_w_toolbar(window['-CANVAS3-'].TKCanvas, fig3, window['controls_cv3'].TKCanvas)
+        draw_figure_w_toolbar(window3['-CANVAS3-'].TKCanvas, fig3, window3['controls_cv3'].TKCanvas)
         window3_open()
 
 def window3_open():
@@ -283,8 +287,6 @@ def window3_open():
 #Workaround for outputs printing wrong place
 print = lambda *args, **kwargs: window['MLINE_KEY'].print(*args, **kwargs)
 
-# Add the plot to the windows
-draw_figure_w_toolbar(window['-CANVAS1-'].TKCanvas, fig1, window['controls_cv1'].TKCanvas)
 
 # # Make the Output Element "read only"
 # window.Element('_OUT_')._TKOut.output.bind("<Key>", lambda e: "break")
@@ -309,9 +311,9 @@ while True:     # The Event Loop
                 loginwindow.close()
                 accwindow.Hide()
                 window.UnHide()
-
-                while True:             #opens the main window after logging in is accepted and starts drawing on defs
-                    window1_open()    
+                draw_figure_w_toolbar(window['-CANVAS1-'].TKCanvas, fig1, window['controls_cv1'].TKCanvas)
+                #opens the main window after logging in is accepted and starts drawing on defs                           
+                window1_open()    
 
     if event == 'Register':         #opens register window if that button is pressed
         regwindow_active=True

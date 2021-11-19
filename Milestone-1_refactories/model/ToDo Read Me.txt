@@ -1,0 +1,12 @@
+You will need to put the Model code from the running example
+https://github.com/NMITTutor/SDV602-2021 
+in this folder here. 
+
+That example includes a UserManager, and Network connectivity, 
+AND demonstrates a CHAT system.
+
+Your Login, Register and Chat code will need an instance of a UserManger.
+
+- chat system on windows not working
+- change csv display from hardcoded to automatically showing after upload
+- login system
