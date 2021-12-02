@@ -6,6 +6,7 @@ import sys as sys
 from os import path
 import argparse
 from typing import Dict
+from view.CRIMFigureViewModels import DataSource
 
 class DataManager():
     dict_list = []
@@ -177,7 +178,7 @@ if __name__ == "__main__":
     dict_lst,values_lst = scan(args['header'])
     display_table(dict_lst)
     """
-    csv_file_name = "nz-convictions (copy).csv"
+    csv_file_name = DataSource.ds
     data_manager = DataManager()
     csv_file_obj = data_manager.get_file(csv_file_name)
     print(f" STATUS [{data_manager.status}]")
@@ -185,7 +186,3 @@ if __name__ == "__main__":
         dict_lst,values_lst = data_manager.scan(filter=lambda line: '5' in [line_col(line,4)]  ,has_header = False,csv_file = csv_file_obj)
         data_manager.close_file(csv_file_obj)
         if not('File Error') in data_manager.status: data_manager.display_table(dict_lst)
-
-       
-
-

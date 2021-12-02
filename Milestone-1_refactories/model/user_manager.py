@@ -54,6 +54,7 @@ class UserManager(object):
 
     def login(self, user_id, password):
         result = None
+        print(f"PersonID = '{user_id}' AND Password = '{password}'")
         api_result = self.jsnDrop.select("tblUser",f"PersonID = '{user_id}' AND Password = '{password}'") # Danger SQL injection attack via user_id?? Is JsnDrop SQL injection attack safe??
         if( "DATA_ERROR" in self.jsnDrop.jsnStatus): # then the (user_id,password) pair do not exist - so bad login
             result = "Login Fail"

@@ -24,5 +24,3 @@ class Model():
     def get_column(self,column_name):
         if self.record_set and column_name in self.field_names:
             return [record[column_name] for record in self.record_set]
-
-    

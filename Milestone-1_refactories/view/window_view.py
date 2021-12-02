@@ -3,6 +3,7 @@ import PySimpleGUI as sg
 
 class WindowView(object):
     views = {}
+    current_view = None
     def __init__(self,title,layout,controls) -> None:    
         super().__init__()
 
@@ -56,6 +57,7 @@ class WindowView(object):
     def CatchEvents(self):
         if (not self.window is None) and (not self.controls is None) :
             print("In catch events")
+            WindowView.current_view =  self
             self.Show() 
             while True :
                 if not self.window is None:

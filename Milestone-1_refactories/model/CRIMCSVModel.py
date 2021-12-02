@@ -76,8 +76,9 @@ if __name__ == "__main__":
 
     """
     a_model = CRIM_CSVModel('nz-convictions (copy).csv',
-                        Select_Columns = {"years":0,"convictions_f":3,"convictions_m": 4,
-                                        "euro": 8, "maori":9,"pacific":10,"asian": 11,"other": 12},
-                        Transposed = True)
+                        Select_Columns = {"years":0,"convictions_f":3,"convictions_m":4,
+                                                "euro":8, "maori":9,"pacific":10,"asian":11,"other":12,
+                                                "under19":15, "20-24":16, "25-29":17, "30-34":18, "35-39":19, "40-44":20, '45-49':21, '50-54':22, '55-59':23, '60-64':24, '65+':25},
+                            Transposed = True)
     selections = a_model.select()
     print(selections)

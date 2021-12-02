@@ -5,8 +5,5 @@ in this folder here.
 That example includes a UserManager, and Network connectivity, 
 AND demonstrates a CHAT system.
 
-Your Login, Register and Chat code will need an instance of a UserManger.
+Your Login, Register and Chat code will need an instance of a UserManager.
 
-- chat system on windows not working
-- change csv display from hardcoded to automatically showing after upload
-- login system
